@@ -7,3 +7,6 @@ env/
 # Helm intermediates and artifacts
 charts
 *.tgz
+
+# Mac OSX
+**/.DS_Store
