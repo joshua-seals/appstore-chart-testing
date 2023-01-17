@@ -3,8 +3,8 @@ ACCOUNT_DEFAULT_HTTP_PROTOCOL: https
 django:
   ALLOW_SAML_LOGIN: true
   DEV_PHASE: dev
-  DOCKSTORE_APPS_BRANCH: "develop"
-  AUTHORIZED_USERS: "pjl@email.unc.edu,pjl@renci.org,pjl@unc.edu,tcheek@renci.org"
+  DOCKSTORE_APPS_BRANCH: "jupyter-lab"
+  AUTHORIZED_USERS: "pjl@email.unc.edu,pjl@renci.org,pjl@unc.edu,tcheek@renci.org,mbacon@renci.org"
 
 # image:
 #   tag: 
