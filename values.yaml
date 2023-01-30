@@ -201,6 +201,10 @@ apps:
   WEBTOP_PUID: "1000"
   # -- PGID variable in webtop specifies the GID to switch the user to after initialization.
   WEBTOP_PGID: "1000"
+  # -- PGADMIN app default email
+  PGADMIN_DEFAULT_EMAIL: ""  
+  # -- PGADMIN app default password
+  PGADMIN_DEFAULT_PASSWORD: ""
 
 appStorage:
   existingClaim: false
