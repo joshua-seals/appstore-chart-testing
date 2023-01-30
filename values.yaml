@@ -205,6 +205,8 @@ apps:
   PGADMIN_DEFAULT_EMAIL: ""  
   # -- PGADMIN app default password
   PGADMIN_DEFAULT_PASSWORD: ""
+  # -- Disable login page
+  PGADMIN_CONFIG_SERVER_MODE: "False"
 
 appStorage:
   existingClaim: false
