@@ -40,11 +40,11 @@ jobs:
 
     - name: Install yq Utility
       run: | 
-        apt-get install yq -y 
+        sudo apt-get install yq -y 
 
     - name: Query Github and Set Latest AppVersion Tag
       run: |
-        APPVERSION=$(1.1.1)
+        APPVERSION=$(gh release view -R github.com/helxplatform/appstore | grep 'tag:' | awk '{print $2}')
         yq -i '.appVersion = $APPVERSION' Chart.yml
       if: ${{ inputs.appVersion }}
 
