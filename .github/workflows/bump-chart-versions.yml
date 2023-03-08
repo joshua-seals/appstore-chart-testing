@@ -69,7 +69,7 @@ jobs:
       run: |
         CHARTVERSION=$(yq '.version') + 1
         yq '.version' Chart.yaml | awk -F. '{print int($3) + 1}'
-      if: ${{ inputs.chartVersion }}
+      if: ${{ inputs.chartVersion }} == ""
 
     - name: Update Chart.yml file 
       env:
