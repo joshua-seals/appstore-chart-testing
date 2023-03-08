@@ -67,7 +67,8 @@ jobs:
     # We obtain version major.minor.patch, and always increment patch by 1.
     - name: AutoIncrement chart version
       run: |
-        yq '.version' Chart.yaml | awk -F. '{print int($3) + 1}'
+        CHARTVERSION=$(yq '.version' Chart.yaml | awk -F. '{print int($3) + 1}')
+        yq -i '.version = $CHARTVERSION' Chart.yaml
       if: ${{ inputs.chartVersion }} == ""
 
     - name: Update Chart.yml file 
@@ -85,4 +86,3 @@ jobs:
         author_name: Actions_${{ github.actor}}
         message: 'Bumping Chart.yaml appVersion and chart version'
         add: 'Chart.yaml'
-
