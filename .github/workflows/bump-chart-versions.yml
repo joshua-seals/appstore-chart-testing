@@ -40,9 +40,9 @@ jobs:
 
     - name: Query Github and Set Latest AppVersion Tag
       run: |
-        APPVERSION=$(gh tag somewhere )
+        APPVERSION=$(1.1.1)
         yq -i '.appVersion = $APPVERSION' Chart.yml
-      if: ${{ inputs.appVersion }} == "" || ${{ inputs.appVersion }} == Nan
+      if: ${{ inputs.appVersion }}
 
     - name: Set User Specified AppVersion Tag
       env:
@@ -58,7 +58,7 @@ jobs:
       run: |
         CHARTVERSION=$(yq '.version') + 1
         yq '.version' Chart.yaml | awk -F. '{print int($3) + 1}'
-      if: ${{ inputs.chartVersion }} == "" || ${{ inputs.chartVersion }} == Nan
+      if: ${{ inputs.chartVersion }}
 
     - name: Update Chart.yml file 
       env:
@@ -67,4 +67,3 @@ jobs:
         yq -i '.version = $CHARTVERSION'
       if: ${{ inputs.chartVersion }}
 
-      
