@@ -79,6 +79,8 @@ jobs:
 
     - name: Commit Chart.yaml Changes
       uses: EndBug/add-and-commit@v9
+      env:
+        GH_TOKEN: ${{ github.token }}
       with:
         author_name: Actions_${{ github.actor}}
         message: 'Bumping Chart.yaml appVersion and chart version'
