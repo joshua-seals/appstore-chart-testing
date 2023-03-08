@@ -40,7 +40,7 @@ jobs:
 
     - name: Install yq Utility
       run: | 
-        sudo apt-get install yq -y
+        sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
 
     # The APPVERSION code is brittle and could easily break. 
     # Additionally, github api doesn't support getting the latest tag
