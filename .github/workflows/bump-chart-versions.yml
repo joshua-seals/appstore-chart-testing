@@ -48,6 +48,8 @@ jobs:
     # We can mostly trust this as the application should have been updated 
     # automatically by github actions for a new release and new tag.
     - name: Query Github and Set Latest AppVersion Tag
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: |
         APPVERSION=$(gh release view -R github.com/helxplatform/appstore | grep 'tag:' | awk '{print $2}')
         yq -i '.appVersion = $APPVERSION' Chart.yml
