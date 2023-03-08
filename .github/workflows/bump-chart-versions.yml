@@ -4,8 +4,8 @@
 # and incrementing 'version' field by 1 in the patch section.
 #
 # This workflow will uses the github api to get
-# latest app tag information and update 'appVersion' field or 
-# will take user input for this appVersion field.
+# latest app release tag information and update 'appVersion' field or 
+# will take user input for the appVersion field.
 #
 # Eg. Chart.yml
 #        name: appstore
@@ -76,4 +76,12 @@ jobs:
       run: |
         yq -i '.version = $CHARTVERSION'
       if: ${{ inputs.chartVersion }}
+
+    - name: Commit Chart.yaml changes
+      env:
+        GH_TOKEN: ${{ github.token }}
+      run: |
+        git add Chart.yaml 
+        git commit -m "Bump Chart.yaml appversion and chart version through github action."
+        git push
 
