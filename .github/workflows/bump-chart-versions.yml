@@ -52,7 +52,7 @@ jobs:
         GH_TOKEN: ${{ github.token }}
       run: |
         APPVERSION=$(gh release view -R github.com/helxplatform/appstore | grep 'tag:' | awk '{print $2}')
-        yq -i '.appVersion = $APPVERSION' Chart.yml
+        yq -i '.appVersion = $APPVERSION' Chart.yaml
       if: ${{ inputs.appVersion }}
 
     - name: Set User Specified AppVersion Tag
