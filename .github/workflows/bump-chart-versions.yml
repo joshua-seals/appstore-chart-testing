@@ -38,6 +38,10 @@ jobs:
         ref: ${{ github.head_ref }} 
         fetch-depth: 0
 
+    - name: Install yq Utility
+      run: | 
+        apt-get install yq -y 
+
     - name: Query Github and Set Latest AppVersion Tag
       run: |
         APPVERSION=$(1.1.1)
