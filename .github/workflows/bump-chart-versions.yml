@@ -1,0 +1,68 @@
+# Convenience workflow responsible for adjusting
+# Chart.yml 'version' & 'appVersion' fields to the 
+# corresponding app:[version-tag]
+# and incrementing 'version' field by 1 in the patch section.
+#
+# This workflow will uses the github api to get
+# latest app tag information and update 'appVersion' field or 
+# will take user input for this appVersion field.
+#
+# Eg. Chart.yml
+#        name: appstore
+#        version: 1.7.0    -> 1.7.1 -> 1.7.2
+#        appVersion: 2.1.0 -> 2.2.1 -> 3.0.0
+#  
+# CI/CD Maintainer: Joshua Seals 🦭
+#
+
+name: Bump-Chart-Versions
+on:
+  workflow_dispatch:
+    inputs:
+      appVersion:
+        description: 'Application version for Helm Chart to use. If unset, workflow uses github api to obtain newest version tag.'
+        required: false
+        type: string
+      chartVersion:
+        description: 'With every change to the helm chart, the chart version should be updated. If unset- patch increments by +1.'
+        required: false
+        type: string
+    
+jobs:
+  bump-app-version:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+      with:
+        ref: ${{ github.head_ref }} 
+        fetch-depth: 0
+
+    - name: Query Github and Set Latest AppVersion Tag
+      run: |
+        APPVERSION=$(gh tag somewhere )
+        yq -i '.appVersion = $APPVERSION' Chart.yml
+      if: ${{ inputs.appVersion }} == "" || ${{ inputs.appVersion }} == Nan
+
+    - name: Set User Specified AppVersion Tag
+      env:
+        APPVERSION: ${{ inputs.appVersion }}
+      run: |
+        yq -i '.appVersion = $APPVERSION' Chart.yml
+      if: ${{ inputs.appVersion }}
+
+    # Awk magic below
+    # Ref: https://www.reddit.com/r/bash/comments/78rxyv/how_to_make_awk_return_an_integer/
+    # We obtain version major.minor.patch, and always increment patch by 1.
+    - name: AutoIncrement chart version
+      run: |
+        CHARTVERSION=$(yq '.version') + 1
+        yq '.version' Chart.yaml | awk -F. '{print int($3) + 1}'
+      if: ${{ inputs.chartVersion }} == "" || ${{ inputs.chartVersion }} == Nan
+
+    - name: Update Chart.yml file 
+      env:
+        CHARTVERSION: ${{ inputs.chartVersion }} 
+      run: |
+        yq -i '.version = $CHARTVERSION'
+      if: ${{ inputs.chartVersion }}
