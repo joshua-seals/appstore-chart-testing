@@ -40,8 +40,13 @@ jobs:
 
     - name: Install yq Utility
       run: | 
-        sudo apt-get install yq -y 
+        sudo apt-get install yq -y
 
+    # The APPVERSION code is brittle and could easily break. 
+    # Additionally, github api doesn't support getting the latest tag
+    # So here we rely on the 'release' version to get the latest tag.
+    # We can mostly trust this as the application should have been updated 
+    # automatically by github actions for a new release and new tag.
     - name: Query Github and Set Latest AppVersion Tag
       run: |
         APPVERSION=$(gh release view -R github.com/helxplatform/appstore | grep 'tag:' | awk '{print $2}')
