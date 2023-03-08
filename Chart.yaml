@@ -17,7 +17,7 @@ version: 1.7.0
 # incremented each time you make changes to the application.
 appVersion: 2.0.0
 dependencies:
-  - name: postgresql
-    condition: postgresql.enabled
-    version: "11.6.26"
-    repository: "https://charts.bitnami.com/bitnami"
+- name: postgresql
+  condition: postgresql.enabled
+  version: "11.6.26"
+  repository: "https://charts.bitnami.com/bitnami"

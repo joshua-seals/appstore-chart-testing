@@ -51,7 +51,7 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        APPVERSION=$(gh release view -R github.com/helxplatform/appstore | grep 'tag:' | awk '{print $2}')
+        APPVERSION=$(gh release view -R github.com/${{ github.repo }} | grep 'tag:' | awk '{print $2}')
         yq -i '.appVersion = $APPVERSION' Chart.yaml
       if: ${{ inputs.appVersion }} == ""
 
@@ -71,11 +71,11 @@ jobs:
         yq -i '.version = $CHARTVERSION' Chart.yaml
       if: ${{ inputs.chartVersion }} == ""
 
-    - name: Update Chart.yml file 
+    - name: Update Chart.yaml file 
       env:
         CHARTVERSION: ${{ inputs.chartVersion }} 
       run: |
-        yq -i '.version = $CHARTVERSION'
+        yq -i '.version = $CHARTVERSION' Chart.yaml
       if: ${{ inputs.chartVersion }}
 
     - name: Commit Chart.yaml Changes
