@@ -67,7 +67,6 @@ jobs:
     # We obtain version major.minor.patch, and always increment patch by 1.
     - name: AutoIncrement chart version
       run: |
-        CHARTVERSION=$(yq '.version') + 1
         yq '.version' Chart.yaml | awk -F. '{print int($3) + 1}'
       if: ${{ inputs.chartVersion }} == ""
 
