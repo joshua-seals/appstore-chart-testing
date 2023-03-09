@@ -103,8 +103,10 @@ jobs:
 
     - name: Echo Envs
       run: |
-        echo "$CHARTVERSION"
-        echo "$APPVERSION"
+        CHARTVERSION=$(yq '.version' Chart.yaml)
+        APPVERSION=$(yq '.appVersion' Chart.yaml)
+        echo $CHARTVERSION 
+        echo $APPVERSION
 
     - name: Commit Chart.yaml Changes
       uses: EndBug/add-and-commit@v9
