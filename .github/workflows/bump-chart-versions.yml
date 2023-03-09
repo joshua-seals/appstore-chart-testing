@@ -51,7 +51,7 @@ jobs:
       env:
         GH_TOKEN: ${{ github.token }}
       run: |
-        APPVERSION=$(gh release view -R github.com/${{ github.repo }} | grep 'tag:' | awk '{print $2}')
+        APPVERSION=$(gh release view -R github.com/helxplatform/appstore | grep 'tag:' | awk '{print $2}')
         yq -i '.appVersion = $APPVERSION' Chart.yaml
       if: ${{ inputs.appVersion }} == ""
 
@@ -67,8 +67,10 @@ jobs:
     # We obtain version major.minor.patch, and always increment patch by 1.
     - name: AutoIncrement chart version
       run: |
-        CHARTVERSION=$(yq '.version' Chart.yaml | awk -F. '{print int($3) + 1}')
-        yq -i '.version = $CHARTVERSION' Chart.yaml
+        MAJOR=$(yq '.version' Chart.yaml | awk -F. '{ print $1 }')
+        MINOR=$(yq '.version' Chart.yaml | awk -F. '{ print $2 }')
+        BUMP_PATCH=$(yq '.version' Chart.yaml | awk -F. '{print int($3) + 1}')
+        CHARTVERSION=$(echo $MAJOR.$MINOR.$BUMP_PATCH) yq --inplace '.version | = strenv(CHARTVERSION)' Chart.yaml
       if: ${{ inputs.chartVersion }} == ""
 
     - name: Update Chart.yaml file 
