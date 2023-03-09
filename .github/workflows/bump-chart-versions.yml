@@ -63,14 +63,14 @@ jobs:
         # Because the tag uses "v2.0.0" the awk Field to split on is 'v'.
       run: |
         APPVERSION=$(gh release view -R github.com/helxplatform/appstore | grep 'tag:' | awk -Fv '{print $2}') \
-        yq --inplace '.appVersion = strenv(APPVERSION)' Chart.yaml
+        yq --inplace '.appVersion = env(APPVERSION)' Chart.yaml
       if: ( steps.checkAppVersion.outputs.appVersionPresent == 'NO')
 
     - name: Set User Specified AppVersion Tag
       env:
         APPVERSION: ${{ inputs.appVersion }}
       run: |
-        APP=$(echo $APPVERSION) yq --inplace '.appVersion = strenv(APP)' Chart.yaml
+        APP=$(echo $APPVERSION) yq --inplace '.appVersion = env(APP)' Chart.yaml
       if: ( steps.checkAppVersion.outputs.appVersionPresent == 'YES')
 
     - name: Check chartVersion Inputs
@@ -91,14 +91,14 @@ jobs:
         MAJOR=$(yq '.version' Chart.yaml | awk -F. '{ print $1 }')
         MINOR=$(yq '.version' Chart.yaml | awk -F. '{ print $2 }')
         BUMP_PATCH=$(yq '.version' Chart.yaml | awk -F. '{print int($3) + 1}')
-        CHARTVERSION=$(echo $MAJOR.$MINOR.$BUMP_PATCH) yq --inplace '.version = strenv(CHARTVERSION)' Chart.yaml
+        CHARTVERSION=$(echo $MAJOR.$MINOR.$BUMP_PATCH) yq --inplace '.version = env(CHARTVERSION)' Chart.yaml
       if: ( steps.checkChartVersion.outputs.chartVersionPresent == 'NO')
 
     - name: Update Chart.yaml file 
       env:
         CHARTVERSION: ${{ inputs.chartVersion }} 
       run: |
-        CHART=$(echo $CHARTVERSION) yq --inplace '.version = strenv($CHART)' Chart.yaml
+        CHART=$(echo $CHARTVERSION) yq --inplace '.version = env($CHART)' Chart.yaml
       if: ( steps.checkChartVersion.outputs.chartVersionPresent == 'YES')
 
     - name: Commit Chart.yaml Changes
