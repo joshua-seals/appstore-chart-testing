@@ -98,7 +98,7 @@ jobs:
       env:
         CHARTVERSION: ${{ inputs.chartVersion }} 
       run: |
-        CHART=$(echo $CHARTVERSION) yq --inplace '.version = env($CHART)' Chart.yaml
+        CHART=$(echo $CHARTVERSION) yq --inplace '.version = env(CHART)' Chart.yaml
       if: ( steps.checkChartVersion.outputs.chartVersionPresent == 'YES')
 
     - name: Commit Chart.yaml Changes
