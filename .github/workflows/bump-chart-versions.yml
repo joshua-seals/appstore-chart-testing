@@ -101,12 +101,35 @@ jobs:
         CHART=$(echo $CHARTVERSION) yq --inplace '.version = env(CHART)' Chart.yaml
       if: ( steps.checkChartVersion.outputs.chartVersionPresent == 'YES')
 
-    - name: Echo Envs
+    - name: Get New Chart Version
+      id: chart
       run: |
         CHARTVERSION=$(yq '.version' Chart.yaml)
+        echo chart=$CHARTVERSION >> $GITHUB_OUTPUT
+
+    - name: Get New App Version 
+      id: app
+      run: |  
         APPVERSION=$(yq '.appVersion' Chart.yaml)
-        echo $CHARTVERSION 
-        echo $APPVERSION
+        echo app=$APPVERSION >> $GITHUB_OUTPUT
+
+    - name: Add Version Badge
+      uses: RubbaBoy/BYOB@v1.3.0
+      with:
+        NAME: version
+        LABEL: 'Version: '
+        STATUS: ${{ steps.chart.outputs.chart }}
+        COLOR: blue
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Add Version Badge
+      uses: RubbaBoy/BYOB@v1.3.0
+      with:
+        NAME: appversion
+        LABEL: 'AppVersion: '
+        STATUS: ${{ steps.app.outputs.app }}
+        COLOR: blue
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}     
 
     - name: Commit Chart.yaml Changes
       uses: EndBug/add-and-commit@v9
