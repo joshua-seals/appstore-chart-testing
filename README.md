@@ -1,6 +1,6 @@
 # appstore
 
-![Version:](https://github.com/joshua-seals/appstore-chart-testing/blob/shields/shields.json&style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)![AppVersion:](https://github.com/joshua-seals/appstore-chart-testing/blob/shields/shields.json)
+![](https://github.com/joshua-seals/appstore-chart-testing/tree/shields) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)![](https://github.com/joshua-seals/appstore-chart-testing/tree/shields)
 
 A Helm chart for Kubernetes
 
