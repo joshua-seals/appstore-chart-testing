@@ -24,7 +24,7 @@ on:
         required: false
         type: string
       chartVersion:
-        description: 'With every change to the helm chart, the chart version should be updated. If unset- patch increments by +1.'
+        description: 'With every change to the helm chart, the chart version should be incremented. If unset- patch increments by +1.'
         required: false
         type: string
     
@@ -42,6 +42,16 @@ jobs:
       run: | 
         sudo wget -qO /usr/local/bin/yq https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
 
+    - name: Check appVersion Inputs
+      id: checkAppVersion
+      shell: bash
+      run: |
+        if [ "${{ inputs.appVersion }}" == "" ]; then
+          echo "appVersionPresent=NO" >> $GITHUB_OUTPUT
+        else
+          echo "appVersionPresent=YES" >> $GITHUB_OUTPUT
+        fi
+
     # The APPVERSION code is brittle and could easily break. 
     # Additionally, github api doesn't support getting the latest tag
     # So here we rely on the 'release' version to get the latest tag.
@@ -54,14 +64,24 @@ jobs:
       run: |
         APPVERSION=$(gh release view -R github.com/helxplatform/appstore | grep 'tag:' | awk -Fv '{print $2}') \
         yq --inplace '.appVersion = strenv(APPVERSION)' Chart.yaml
-      if: ${{ inputs.appVersion }} == ""
+      if: ( steps.checkAppVersion.outputs.appVersionPresent == 'NO')
 
     - name: Set User Specified AppVersion Tag
       env:
         APPVERSION: ${{ inputs.appVersion }}
       run: |
         APP=$(echo $APPVERSION) yq --inplace '.appVersion = strenv(APP)' Chart.yaml
-      if: ${{ inputs.appVersion }}
+      if: ( steps.checkAppVersion.outputs.appVersionPresent == 'YES')
+
+    - name: Check chartVersion Inputs
+      id: checkChartVersion
+      shell: bash
+      run: |
+        if [ "${{ inputs.chartVersion }}" == "" ]; then
+          echo "chartVersionPresent=NO" >> $GITHUB_OUTPUT
+        else
+          echo "chartVersionPresent=YES" >> $GITHUB_OUTPUT
+        fi
 
     # Awk magic below
     # Ref: https://www.reddit.com/r/bash/comments/78rxyv/how_to_make_awk_return_an_integer/
@@ -72,14 +92,14 @@ jobs:
         MINOR=$(yq '.version' Chart.yaml | awk -F. '{ print $2 }')
         BUMP_PATCH=$(yq '.version' Chart.yaml | awk -F. '{print int($3) + 1}')
         CHARTVERSION=$(echo $MAJOR.$MINOR.$BUMP_PATCH) yq --inplace '.version = strenv(CHARTVERSION)' Chart.yaml
-      if: ${{ inputs.chartVersion }} == ""
+      if: ( steps.checkChartVersion.outputs.chartVersionPresent == 'NO')
 
     - name: Update Chart.yaml file 
       env:
         CHARTVERSION: ${{ inputs.chartVersion }} 
       run: |
         CHART=$(echo $CHARTVERSION) yq --inplace '.version = strenv($CHART)' Chart.yaml
-      if: ${{ inputs.chartVersion }}
+      if: ( steps.checkChartVersion.outputs.chartVersionPresent == 'YES')
 
     - name: Commit Chart.yaml Changes
       uses: EndBug/add-and-commit@v9
