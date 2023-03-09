@@ -50,16 +50,17 @@ jobs:
     - name: Query Github and Set Latest AppVersion Tag
       env:
         GH_TOKEN: ${{ github.token }}
+        # Because the tag uses "v2.0.0" the awk Field to split on is 'v'.
       run: |
-        APPVERSION=$(gh release view -R github.com/helxplatform/appstore | grep 'tag:' | awk '{print $2}') \
-        yq -i '.appVersion = strenv(APPVERSION)' Chart.yaml
+        APPVERSION=$(gh release view -R github.com/helxplatform/appstore | grep 'tag:' | awk -Fv '{print $2}') \
+        yq --inplace '.appVersion = strenv(APPVERSION)' Chart.yaml
       if: ${{ inputs.appVersion }} == ""
 
     - name: Set User Specified AppVersion Tag
       env:
         APPVERSION: ${{ inputs.appVersion }}
       run: |
-        APP=$(echo $APPVERSION) yq -i '.appVersion = $APP' Chart.yml
+        APP=$(echo $APPVERSION) yq --inplace '.appVersion = strenv(APP)' Chart.yaml
       if: ${{ inputs.appVersion }}
 
     # Awk magic below
@@ -77,7 +78,7 @@ jobs:
       env:
         CHARTVERSION: ${{ inputs.chartVersion }} 
       run: |
-        CHART=$(echo $CHARTVERSION) yq -i '.version = $CHART' Chart.yaml
+        CHART=$(echo $CHARTVERSION) yq --inplace '.version = strenv($CHART)' Chart.yaml
       if: ${{ inputs.chartVersion }}
 
     - name: Commit Chart.yaml Changes
