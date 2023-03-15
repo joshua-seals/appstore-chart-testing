@@ -94,6 +94,14 @@ jobs:
         CHARTVERSION=$(echo $MAJOR.$MINOR.$BUMP_PATCH) yq --inplace '.version = env(CHARTVERSION)' Chart.yaml
       if: ( steps.checkChartVersion.outputs.chartVersionPresent == 'NO')
 
+    - name: Set User Specified chart version
+      env:
+        CHARTVERSION: ${{ inputs.chartVersion }} 
+      run: |
+        CHART=$(echo $CHARTVERSION) yq --inplace '.version = env(CHART)' Chart.yaml
+      if: ( steps.checkChartVersion.outputs.chartVersionPresent == 'YES')
+
+############################## Generate Docs and Push ##########################################   
     - name: Download Helm-Docs
       run: |
         wget https://github.com/norwoodj/helm-docs/releases/download/v1.11.0/helm-docs_1.11.0_Linux_x86_64.tar.gz
