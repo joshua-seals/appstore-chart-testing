@@ -1,6 +1,6 @@
 # appstore
 
-![Version:](https://byob.yarr.is/joshua-seals/appstore-chart-testing/version/shields) ![AppVersion:](https://byob.yarr.is/joshua-seals/appstore-chart-testing/appversion/shields) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat)
+![Version: 1.5.6](https://img.shields.io/badge/Version-1.5.6-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 2.0.0](https://img.shields.io/badge/AppVersion-2.0.0-informational?style=flat-square)
 
 A Helm chart for Kubernetes
 
