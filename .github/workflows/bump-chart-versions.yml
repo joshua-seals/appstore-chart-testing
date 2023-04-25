@@ -105,7 +105,7 @@ jobs:
 
     # Call the lint-test code
     - name: lint and test 
-      uses: .github/workflows/lint-test.yml
+      uses: ./.github/workflows/lint-test.yml
 
 ############################## Generate Docs and Push ##########################################   
     - name: Download Helm-Docs
