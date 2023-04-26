@@ -13,84 +13,71 @@ jobs:
   package-to-helx:
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v3
-      with:
-        ref: ${{ github.head_ref }} 
-        fetch-depth: 0
+#     - name: Checkout Code
+#       uses: actions/checkout@v3
+#       with:
+#         ref: ${{ github.head_ref }} 
+#         fetch-depth: 0
 
-############################# Lint-Test #########################
-    - name: Set up Helm
-      uses: azure/setup-helm@v3
-      with:
-        version: v3.11.2
+# ############################# Lint-Test #########################
+#     - name: Set up Helm
+#       uses: azure/setup-helm@v3
+#       with:
+#         version: v3.11.2
 
-    - uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-        check-latest: true
+#     - uses: actions/setup-python@v4
+#       with:
+#         python-version: '3.9'
+#         check-latest: true
 
-    - name: Set up chart-testing
-      uses: helm/chart-testing-action@v2.4.0
+#     - name: Set up chart-testing
+#       uses: helm/chart-testing-action@v2.4.0
 
-    - name: Run chart-testing (list-changed)
-      id: list-changed
-      run: |
-        changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
-        if [[ -n "$changed" ]]; then
-          echo "changed=true" >> "$GITHUB_OUTPUT"
-        fi
+#     - name: Run chart-testing (list-changed)
+#       id: list-changed
+#       run: |
+#         changed=$(ct list-changed --target-branch ${{ github.event.repository.default_branch }})
+#         if [[ -n "$changed" ]]; then
+#           echo "changed=true" >> "$GITHUB_OUTPUT"
+#         fi
 
-    - name: Run chart-testing (lint)
-      if: steps.list-changed.outputs.changed == 'true'
-      run: ct lint --target-branch ${{ github.event.repository.default_branch }}
+#     - name: Run chart-testing (lint)
+#       if: steps.list-changed.outputs.changed == 'true'
+#       run: ct lint --target-branch ${{ github.event.repository.default_branch }}
 
-    - name: Create kind cluster
-      if: steps.list-changed.outputs.changed == 'true'
-      uses: helm/kind-action@v1.4.0
+#     - name: Create kind cluster
+#       if: steps.list-changed.outputs.changed == 'true'
+#       uses: helm/kind-action@v1.4.0
 
-    - name: Run chart-testing (install)
-      if: steps.list-changed.outputs.changed == 'true'
-      run: ct install --target-branch ${{ github.event.repository.default_branch }}
+#     - name: Run chart-testing (install)
+#       if: steps.list-changed.outputs.changed == 'true'
+#       run: ct install --target-branch ${{ github.event.repository.default_branch }}
 
-#################### Package & Push to Helm-Charts ######################    
-    - name: List files in the repository
-      run: |
-        ls ${{ github.workspace }}
+# #################### Package & Push to Helm-Charts ######################    
+#     - name: List files in the repository
+#       run: |
+#         ls ${{ github.workspace }}
 
-    - name: Package Chart 
-      run: |
-        helm package --dependency-update ${{ github.workspace }} --destination /tmp/${{ github.repository_owner }}
+#     - name: Package Chart 
+#       run: |
+#         helm package --dependency-update ${{ github.workspace }} --destination /tmp/${{ github.repository_owner }}
 
-    - name: Get package name 
-      id: name 
-      run: |
-        echo "chart_name=$(ls /tmp/${{ github.repository_owner }}/)" >> $GITHUB_OUTPUT
-        ls /tmp/${{ github.repository_owner }}
+#     - name: Get package name 
+#       id: name 
+#       run: |
+#         echo "chart_name=$(ls /tmp/${{ github.repository_owner }}/)" >> $GITHUB_OUTPUT
+#         ls /tmp/${{ github.repository_owner }}
 
-    - name: Upload artifact 
-      uses: actions/upload-artifact@v3
-      with:
-        name: ${{ steps.name.outputs.chart_name }}
-        path: /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }}
+#     - name: Upload artifact 
+#       uses: actions/upload-artifact@v3
+#       with:
+#         name: ${{ steps.name.outputs.chart_name }}
+#         path: /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }}
 
     - name: Trigger Helm-Charts Workflow
       env:
         GH_TOKEN: ${{ github.token }}
       run: | 
         gh --repo https://github.com/joshua-seals/helm-charts-test \
-        workflow run package-index.yml
-        -f appRepo=${{ github.repository }}
-
-    # - name: Git pull Helm-Charts Add Repo to /docs
-    #   run: |
-    #     mkdir /tmp/${{ github.repository_owner }}/helm-charts
-    #     cd /tmp/${{ github.repository_owner }}/helm-charts
-    #     git clone https://github.com/joshua-seals/helm-charts-test.git .
-    #   continue-on-error: true
-
-    # - name: Move & Verify Package  
-    #   run: | 
-    #     mv /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }} /tmp/${{ github.repository_owner }}/helm-charts/docs
-    #     ls /tmp/${{ github.repository_owner }}/helm-charts/docs | grep ${{ steps.name.outputs.chart_name }}
+        workflow run package-index.yml -f appRepo=${{ github.repository }}
 
