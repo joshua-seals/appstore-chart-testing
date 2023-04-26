@@ -72,7 +72,7 @@ jobs:
       uses: actions/upload-artifact@v3
       with:
         name: ${{ steps.name.outputs.chart_name }}
-        path: /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }}.tgz
+        path: /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }}
 
     # - name: Push to Helm-Charts /docs Directory
       
