@@ -76,8 +76,8 @@ jobs:
 
     - name: Git pull Helm-Charts 
       run: |
-        git clone https://github.com/joshua-seals/helm-charts-test.git /tmp/${{ github.repository_owner }}
-        cp /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }} /tmp/{{ github.repository_owner }}/helm-charts-test/docs
+        git clone https://github.com/joshua-seals/helm-charts-test.git /tmp/${{ github.repository_owner }}/helm-charts
+        cp /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }} /tmp/{{ github.repository_owner }}/helm-charts/helm-charts-test/docs
 
     - name: Verify package 
       run: | 
