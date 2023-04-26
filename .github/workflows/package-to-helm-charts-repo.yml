@@ -79,9 +79,6 @@ jobs:
         mkdir /tmp/${{ github.repository_owner }}/helm-charts
         cd /tmp/${{ github.repository_owner }}/helm-charts
         git clone https://github.com/joshua-seals/helm-charts-test.git .
-        cp /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }} /docs/${{ steps.name.outputs.chart_name }}
-        git add /docs/${{ steps.name.outputs.chart_name }}
-        git commit -m "Added ${{ steps.name.outputs.chart_name }} updated chart."
       continue-on-error: true
 
     - name: Verify package 
