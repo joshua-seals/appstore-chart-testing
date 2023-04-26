@@ -65,15 +65,15 @@ jobs:
     - name: Get package name 
       id: name 
       run: |
-        CHART_NAME=$(ls /tmp/ | grep *.tgz)
-        echo $CHART_NAME >> $GITHUB_OUTPUT
+        echo "chart_name=$(ls /tmp | grep *.tgz)" >> $GITHUB_OUTPUT
+        ls /tmp
 
 
     - name: Upload artifact 
       uses: actions/upload-artifact@v3
       with:
-        name: ${{ steps.name.outputs.name }}
-        path: /tmp/${{ steps.name.outputs.name }}
+        name: ${{ steps.name.outputs.chart_name }}
+        path: /tmp/${{ steps.name.outputs.chart_name }}
 
     # - name: Push to Helm-Charts /docs Directory
       
