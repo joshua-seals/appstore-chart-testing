@@ -79,5 +79,7 @@ jobs:
         GH_TOKEN: ${{ secrets.GH_TOKEN }}
       run: | 
         gh --repo https://github.com/joshua-seals/helm-charts-test \
-        workflow run package-index.yml -f appRepo=${{ github.repository }}
+        workflow run package-index.yml \
+        -f appRepo=${{ github.repository }} \
+        --ref develop
 
