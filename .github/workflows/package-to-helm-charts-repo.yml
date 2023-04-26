@@ -66,12 +66,13 @@ jobs:
       id: name 
       run: |
         echo "chart_name=$(ls /tmp/${{ github.repository_owner }}/ | grep *.tgz)" >> $GITHUB_OUTPUT
+        ls /tmp/${{ github.repository_owner }}
 
     - name: Upload artifact 
       uses: actions/upload-artifact@v3
       with:
         name: ${{ steps.name.outputs.chart_name }}
-        path: /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }}
+        path: /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }}.tgz
 
     # - name: Push to Helm-Charts /docs Directory
       
