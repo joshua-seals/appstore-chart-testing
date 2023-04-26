@@ -74,14 +74,21 @@ jobs:
         name: ${{ steps.name.outputs.chart_name }}
         path: /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }}
 
-    - name: Git pull Helm-Charts Add Repo to /docs
-      run: |
-        mkdir /tmp/${{ github.repository_owner }}/helm-charts
-        cd /tmp/${{ github.repository_owner }}/helm-charts
-        git clone https://github.com/joshua-seals/helm-charts-test.git .
-      continue-on-error: true
-
-    - name: Verify package 
+    - name: Trigger Helm-Charts Workflow 
       run: | 
-        mv /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }} /tmp/${{ github.repository_owner }}/helm-charts/docs
-        ls /tmp/${{ github.repository_owner }}/helm-charts/docs
+        gh --repo https://github.com/joshua-seals/helm-charts-test \
+        workflow run package-index.yml
+        -f appRepo=${{ github.repository }}
+
+    # - name: Git pull Helm-Charts Add Repo to /docs
+    #   run: |
+    #     mkdir /tmp/${{ github.repository_owner }}/helm-charts
+    #     cd /tmp/${{ github.repository_owner }}/helm-charts
+    #     git clone https://github.com/joshua-seals/helm-charts-test.git .
+    #   continue-on-error: true
+
+    # - name: Move & Verify Package  
+    #   run: | 
+    #     mv /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }} /tmp/${{ github.repository_owner }}/helm-charts/docs
+    #     ls /tmp/${{ github.repository_owner }}/helm-charts/docs | grep ${{ steps.name.outputs.chart_name }}
+
