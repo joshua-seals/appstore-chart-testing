@@ -81,5 +81,5 @@ jobs:
 
     - name: Verify package 
       run: | 
-        ls /tmp/{{ github.repository_owner }}/helm-charts/
+        ls /tmp/${{ github.repository_owner }}/helm-charts/
       
