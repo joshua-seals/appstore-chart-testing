@@ -74,7 +74,9 @@ jobs:
         name: ${{ steps.name.outputs.chart_name }}
         path: /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }}
 
-    - name: Trigger Helm-Charts Workflow 
+    - name: Trigger Helm-Charts Workflow
+      env:
+        GH_TOKEN: ${{ github.token }}
       run: | 
         gh --repo https://github.com/joshua-seals/helm-charts-test \
         workflow run package-index.yml
