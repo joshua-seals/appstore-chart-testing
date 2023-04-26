@@ -65,7 +65,7 @@ jobs:
     - name: Get package name 
       id: name 
       run: |
-        echo "chart_name=$(ls /tmp/${{ github.repository_owner }} | grep *.tgz)" >> $GITHUB_OUTPUT
+        echo "chart_name=$(ls /tmp/${{ github.repository_owner }}/ | grep *.tgz)" >> $GITHUB_OUTPUT
 
     - name: Upload artifact 
       uses: actions/upload-artifact@v3
