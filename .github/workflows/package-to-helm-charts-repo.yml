@@ -54,6 +54,9 @@ jobs:
       run: ct install --target-branch ${{ github.event.repository.default_branch }}
 
 #################### Package & Push to Helm-Charts ######################    
+    - name: List files in the repository
+      run: |
+        ls ${{ github.workspace }}
 
     - name: Package Chart 
       run: |
