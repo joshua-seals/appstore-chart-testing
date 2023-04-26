@@ -60,20 +60,18 @@ jobs:
 
     - name: Package Chart 
       run: |
-        helm package --dependency-update ${{ github.workspace }} --destination /tmp
+        helm package --dependency-update ${{ github.workspace }} --destination /tmp/${{ github.repository_owner }}
 
     - name: Get package name 
       id: name 
       run: |
-        echo "chart_name=$(ls /tmp | grep *.tgz)" >> $GITHUB_OUTPUT
-        ls /tmp
-
+        echo "chart_name=$(ls /tmp/${{ github.repository_owner }} | grep *.tgz)" >> $GITHUB_OUTPUT
 
     - name: Upload artifact 
       uses: actions/upload-artifact@v3
       with:
         name: ${{ steps.name.outputs.chart_name }}
-        path: /tmp/${{ steps.name.outputs.chart_name }}
+        path: /tmp/${{ github.repository_owner }}/${{ steps.name.outputs.chart_name }}
 
     # - name: Push to Helm-Charts /docs Directory
       
