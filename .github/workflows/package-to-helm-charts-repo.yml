@@ -58,7 +58,7 @@ jobs:
     - name: Package Chart 
       run: |
         PACKAGE=$(echo ${{ github.repository }} | awk -F '/' '{ print $2 }')
-        helm package --dependency-update $PACKAGE --destination /tmp
+        helm package --dependency-update ./$PACKAGE --destination /tmp
 
     - name: Get package name 
       id: name 
